@@ -1,4 +1,5 @@
 import React from 'react';
+import './SearchBar'
 
 class SearchBar extends React.Component {
     render(){
