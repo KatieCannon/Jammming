@@ -2,6 +2,23 @@ import React from 'react';
 import './App.css';
 
 class App extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      searchResults: [{
+        name:'name1',
+        album: 'album1',
+        artist: 'artist1',
+        id: 'id1'
+      },
+      {
+        name:'name2',
+        album: 'album2',
+        artist: 'artist2',
+        id: 'id2'
+      }]
+    }
+  }
   render(){
     return(
       <div>
