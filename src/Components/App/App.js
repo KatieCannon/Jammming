@@ -25,9 +25,9 @@ class App extends React.Component {
       playListName: 'PlayListName',
       playList: [
         {
-        name: 'name1',
-        artist: 'artist1',
-        album: 'album1',
+        name: 'playlistname1',
+        artist: 'playlistartist1',
+        album: 'playlistalbum1',
         id:' id1'
       }
     ]
