@@ -1,7 +1,9 @@
+const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 const redirectUri = "http://localhost:3000/";
 let accessToken;
 const Spotify = {
     getAccessToken(){
+     
         if(accessToken) {
             return accessToken;
         } 
@@ -15,7 +17,7 @@ const Spotify = {
             return accessToken;
         } 
          else {
-             const accessUrl = `https://accounts.spotify.com/authorize?client_id=${process.env.REACT_APP_SPOTIFY_CLIENT_ID}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectUri}`;
+             const accessUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectUri}`;
              window.location = accessUrl;
          }
         
@@ -44,6 +46,40 @@ const Spotify = {
                 )
             )}
             
+        })
+    },
+
+    savePlaylist(playListName, trackURIs){
+        if(!playListName || !trackURIs) {
+            return;
+        }
+        const accessToken = Spotify.getAccessToken();
+        const headers = { Authorization: `Bearer ${accessToken}`};
+        let userId;
+        return fetch('https://api.spotify.com/v1/me', 
+        {
+            headers: headers
+        }
+        ).then(response => {
+            return response.json();
+        }).then(jsonResponse => {
+           userId = jsonResponse.id;
+           return fetch(`https://api.spotify.com/v1/users/${userId}/playlists`,
+           {
+               headers: headers,
+               method: 'POST',
+               body: JSON.stringify({name: playListName})
+           }).then(response => {
+               return response.json();
+           }).then(jsonResponse => {
+               const playListId = jsonResponse.id;
+               return fetch(`https://api.spotify.com/v1/users/${userId}/playlists/${playListId}/tracks`,
+               {
+                   headers: headers,
+                   method: 'POST',
+                   body: JSON.stringify({uris: trackURIs})
+               })
+           })
         })
     }
 };
