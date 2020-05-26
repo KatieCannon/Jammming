@@ -1,5 +1,5 @@
 const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
-const redirectUri = "http://playlist_app.surge.sh/";
+const redirectUri = "playlist_app.surge.sh/";
 let accessToken;
 const Spotify = {
     getAccessToken(){
