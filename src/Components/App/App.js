@@ -17,7 +17,7 @@ class App extends React.Component {
     this.removeTrack =this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
-    this.search = this.search.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
     this.removeFromSearchList = this.removeFromSearchList.bind(this);
   }
   addTrack(track){
@@ -55,9 +55,14 @@ class App extends React.Component {
     });
   }
 
-  search(term) {
-    Spotify.search(term).then(results => {
-      this.setState({searchResults: results})
+  async handleSearch(term) {
+    const searchResults = await Spotify.search(term);
+    const playListTrackIds = this.state.playListTracks.map(track => track.id);
+    const filteredSearchResults = searchResults.filter(searchListTrack => {
+        return !playListTrackIds.includes(searchListTrack.id);
+    });
+    this.setState({
+      searchResults: filteredSearchResults
     });
   }
 
@@ -74,7 +79,7 @@ class App extends React.Component {
       <div>
         <h1>Ja<span className="highlight">mmm</span>ing</h1>
         <div className="App">
-          <SearchBar onSearch={this.search}/>
+          <SearchBar onSearch={this.handleSearch}/>
           <div className="App-playlist">
            <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack} onRemoveFromSearchList={this.removeFromSearchList}/>
             <PlayList playListName={this.state.playListName} playListTracks={this.state.playListTracks} onRemove={this.removeTrack} onNameChange={this.updatePlaylistName} onSave={this.savePlaylist}/>
